@@ -5,3 +5,5 @@ vite.config.*
 *.test.*
 .gitattributes
 examples
+.github
+jest.config.js
