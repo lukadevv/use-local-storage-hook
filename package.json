@@ -1,6 +1,6 @@
 {
   "name": "use-super-local-storage",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A simple hook for using localStorage in React and Preact",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
