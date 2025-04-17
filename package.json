@@ -1,0 +1,43 @@
+{
+  "name": "@lukadevv/use-local-storage",
+  "version": "1.0.0",
+  "description": "A simple hook for using localStorage in React and Preact",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup src/index.ts --format esm,cjs --dts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukadevv/use-local-storage-hook.git"
+  },
+  "keywords": [
+    "react",
+    "preact",
+    "localstorage",
+    "hook",
+    "useLocalStorage"
+  ],
+  "author": "lukadevv",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lukadevv/use-local-storage-hook/issues"
+  },
+  "homepage": "https://github.com/lukadevv/use-local-storage-hook#readme",
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2",
+    "tsup": "7.2.0",
+    "typescript": "^5.8.3"
+  }
+}
