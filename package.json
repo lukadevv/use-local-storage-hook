@@ -9,11 +9,16 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.d.ts",
+      "types": "./dist/types.d.ts"
     }
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup src/index.ts --format esm,cjs --dts"
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "publish": "npm publish --access=public"
   },
   "repository": {
     "type": "git",
