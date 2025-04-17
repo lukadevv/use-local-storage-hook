@@ -11,7 +11,7 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     onError: (value: any) => void;
     restoreOnError: boolean;
     useBroadcastChannel: boolean;
-    encrypt: { key?: boolean; value?: boolean };
+    encrypt: { key?: boolean; value?: boolean; phrase: string };
     backupOnError: boolean;
   }> = {}
 ) => {
@@ -23,14 +23,33 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     backupOnError,
   } = config;
 
-  const encryptionPhrase = "default_phrase"; // Replace with a secure phrase or pass it via config
-
+  /**
+   * Encrypts the given value if encryption is needed.
+   *
+   * @param value - The value to encrypt.
+   * @param shouldEncrypt - Indicates whether to encrypt the value.
+   * @returns The encrypted or original value.
+   */
   const encryptIfNeeded = (value: string, shouldEncrypt?: boolean) =>
-    shouldEncrypt ? encryptString(encryptionPhrase, value) : value;
+    shouldEncrypt && encrypt?.phrase
+      ? encryptString(encrypt.phrase, value)
+      : value;
 
+  /**
+   * Decrypts the given value if decryption is needed.
+   *
+   * @param value - The value to decrypt.
+   * @param shouldDecrypt - Indicates whether to decrypt the value.
+   * @returns The decrypted or original value.
+   */
   const decryptIfNeeded = (value: string, shouldDecrypt?: boolean) =>
-    shouldDecrypt ? decryptString(encryptionPhrase, value) : value;
+    shouldDecrypt && encrypt?.phrase
+      ? decryptString(encrypt.phrase, value)
+      : value;
 
+  /**
+   * Retrieves the stored value from local storage, decrypts it if needed,
+   */
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const storedKey = encryptIfNeeded(key, encrypt?.key);
@@ -48,6 +67,12 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     return initialValue;
   });
 
+  /**
+   * Sets the value in local storage, encrypts it if needed,
+   * and updates the state.
+   *
+   * @param value - The value to set in local storage.
+   */
   const setValue = (value: T | ((val: T) => T)) => {
     try {
       const valueToStore =
@@ -75,6 +100,9 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     }
   };
 
+  /**
+   * Syncs the local storage value across tabs using BroadcastChannel.
+   */
   useEffect(() => {
     if (useBroadcastChannel) {
       const storedKey = encryptIfNeeded(key, encrypt?.key);

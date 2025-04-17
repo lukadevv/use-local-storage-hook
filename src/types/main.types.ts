@@ -35,8 +35,19 @@ export type LocalStorageConfiguration = {
    * This is not a secure encryption method and should not be used for sensitive data.
    */
   encrypt?: {
+    /**
+     * Encrypt the key.
+     */
     key?: boolean;
+    /**
+     * Encrypt the value.
+     */
     value?: boolean;
+    /**
+     * The phrase used for encryption.
+     * This is a simple XOR cipher and should not be used for sensitive data.
+     */
+    phrase: string;
   };
 
   /**
