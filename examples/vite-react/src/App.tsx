@@ -27,12 +27,23 @@ function App() {
     { debug: true }
   );
 
+  // Example with encryption
+  const [secretValue, setSecretValue] = useLocalStorage<string>(
+    "secretKey",
+    z.string(),
+    "",
+    {
+      debug: true,
+      encrypt: { value: true, phrase: "mySecretPhrase" },
+    }
+  );
+
   const [keys, setKeys] = useState<string[]>([]);
 
   // Refresh key list whenever storage changes
   useEffect(() => {
     setKeys(Object.keys(localStorage));
-  }, [numberValue, stringValue, objectValue]);
+  }, [numberValue, stringValue, objectValue, secretValue]);
 
   // Handlers for each type
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +60,10 @@ function App() {
       [e.target.name]:
         e.target.name === "age" ? Number(e.target.value) : e.target.value,
     });
+  };
+
+  const handleSecretChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSecretValue(e.target.value);
   };
 
   const handleDelete = (key: string) => {
@@ -185,6 +200,29 @@ function App() {
               />
             </div>
           </div>
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ display: "block", marginBottom: 4, fontSize: 18 }}>
+              <b>Encrypted String Test:</b>
+              <span style={{ fontSize: 13, color: "#a3a3a3", marginLeft: 8 }}>
+                (stored encrypted in localStorage)
+              </span>
+            </label>
+            <input
+              type="text"
+              value={secretValue}
+              onChange={handleSecretChange}
+              style={{
+                width: "100%",
+                padding: 10,
+                borderRadius: 8,
+                border: "1px solid #444",
+                background: "#18181b",
+                color: "#fff",
+                fontSize: 18,
+              }}
+              placeholder="Type a secret string…"
+            />
+          </div>
           <div
             style={{
               display: "flex",
@@ -198,6 +236,7 @@ function App() {
                 setNumberValue(numberValue);
                 setStringValue(stringValue);
                 setObjectValue(objectValue);
+                setSecretValue(secretValue);
               }}
               style={{
                 padding: "10px 22px",
@@ -264,7 +303,7 @@ function App() {
             <tr style={{ background: "#18181b" }}>
               <th style={{ padding: 12, textAlign: "left" }}>Key</th>
               <th style={{ padding: 12, textAlign: "left" }}>Value</th>
-              <th style={{ padding: 12, textAlign: "center" }}>Action</th>
+              <th style={{ padding: 12, textAlign: "left" }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -285,22 +324,28 @@ function App() {
                     background:
                       key === "numberKey" ||
                       key === "stringKey" ||
-                      key === "objectKey"
+                      key === "objectKey" ||
+                      key === "secretKey"
                         ? "#334155"
                         : "#18181b",
                   }}
                 >
-                  <td style={{ padding: 12, fontWeight: 500 }}>{key}</td>
+                  <td
+                    style={{ padding: 12, fontWeight: 500, textAlign: "start" }}
+                  >
+                    {key}
+                  </td>
                   <td
                     style={{
                       padding: 12,
                       fontFamily: "monospace",
                       wordBreak: "break-all",
+                      textAlign: "start",
                     }}
                   >
                     {localStorage.getItem(key)}
                   </td>
-                  <td style={{ padding: 12, textAlign: "center" }}>
+                  <td style={{ padding: 12, textAlign: "left" }}>
                     <button
                       onClick={() => handleDelete(key)}
                       style={{
