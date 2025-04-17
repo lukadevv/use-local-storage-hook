@@ -52,6 +52,15 @@ export type LocalStorageConfiguration = {
 
   /**
    * The value will be stored in a different key using the datetime as a suffix.
+   * 
+   * @default false
    */
   backupOnError?: boolean;
+
+  /**
+   * Enable debug mode to log local storage operations.
+   *
+   * @default false
+   */
+  debug?: boolean;
 };
