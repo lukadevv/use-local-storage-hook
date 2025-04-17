@@ -17,8 +17,7 @@
   },
   "scripts": {
     "test": "jest --verbose",
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "publish": "npm publish --access=public"
+    "build": "tsup src/index.ts --format esm,cjs --dts"
   },
   "repository": {
     "type": "git",
