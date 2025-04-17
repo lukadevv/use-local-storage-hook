@@ -1,2 +1,2 @@
-export * from "./useLocalStorage";
-export * as types from "./types";
+export * from "./hooks/index";
+export * as types from "./types/index";
