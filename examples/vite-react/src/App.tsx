@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { z } from "zod";
-import { useLocalStorage } from "../../../src/hooks/useLocalStorage";
+import { useLocalStorage } from "use-super-local-storage";
 
 function App() {
   // Test values for different types
