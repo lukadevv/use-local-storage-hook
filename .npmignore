@@ -4,3 +4,4 @@ tsconfig.json
 vite.config.*
 *.test.*
 .gitattributes
+examples
