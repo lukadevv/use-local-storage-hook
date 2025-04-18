@@ -1,36 +1,40 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { z } from "zod";
 import { useLocalStorage } from "use-super-local-storage";
+import { SchemaType } from "use-super-local-storage";
+
+// Define schemas using the new builder style
+const numberSchema = (s: SchemaType) => s.number();
+const stringSchema = (s: SchemaType) => s.string();
+const objectSchema = (s: SchemaType) =>
+  s.object({ name: s.string(), age: s.number() });
+const secretSchema = (s: SchemaType) => s.string();
 
 function App() {
   // Test values for different types
-  const [numberValue, setNumberValue] = useLocalStorage<number>(
+  const [numberValue, setNumberValue] = useLocalStorage(
     "numberKey",
-    z.number(),
+    numberSchema,
     0,
     { debug: true }
   );
-  const [stringValue, setStringValue] = useLocalStorage<string>(
+  const [stringValue, setStringValue] = useLocalStorage(
     "stringKey",
-    z.string(),
+    stringSchema,
     "",
     { debug: true }
   );
-  const [objectValue, setObjectValue] = useLocalStorage<{
-    name: string;
-    age: number;
-  }>(
+  const [objectValue, setObjectValue] = useLocalStorage(
     "objectKey",
-    z.object({ name: z.string(), age: z.number() }),
+    objectSchema,
     { name: "", age: 0 },
     { debug: true }
   );
 
   // Example with encryption
-  const [secretValue, setSecretValue] = useLocalStorage<string>(
+  const [secretValue, setSecretValue] = useLocalStorage(
     "secretKey",
-    z.string(),
+    secretSchema,
     "",
     {
       debug: true,
