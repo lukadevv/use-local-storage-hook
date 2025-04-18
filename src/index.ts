@@ -1,2 +1,2 @@
 export * from "./hooks/index";
-export * as types from "./types/index";
+export type { SchemaType, LocalStorageConfiguration } from "./types/main.types";
