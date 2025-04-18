@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { useLocalStorage } from "use-super-local-storage";
-import { SchemaType } from "use-super-local-storage";
+import { useLocalStorage, SchemaType } from "use-super-local-storage";
 
 // Define schemas using the new builder style
 const numberSchema = (s: SchemaType) => s.number();

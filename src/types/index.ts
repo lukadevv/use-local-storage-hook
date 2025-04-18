@@ -1,1 +1,1 @@
-export * as types from "./main.types";
+export type { SchemaType, LocalStorageConfiguration } from "./main.types";
