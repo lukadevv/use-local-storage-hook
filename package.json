@@ -1,6 +1,6 @@
 {
   "name": "use-super-local-storage",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A simple hook for using localStorage in React and Preact",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "test": "jest --verbose",
-    "build": "tsup src/index.ts --format esm --dts --minify"
+    "build": "tsup src/index.ts --format esm,cjs --dts --minify"
   },
   "repository": {
     "type": "git",
