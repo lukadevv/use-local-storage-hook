@@ -10,6 +10,10 @@
 
 </div>
 
+Examples:
+- React: https://github.com/lukadevv/use-super-local-storage/tree/main/examples/vite-react
+- Preact: https://github.com/lukadevv/use-super-local-storage/tree/main/examples/vite-preact
+
 `use-super-local-storage` is a React hook that simplifies working with `localStorage` while providing advanced features like encryption, schema validation, error handling, and cross-tab synchronization.
 
 ## Installation
