@@ -13,7 +13,9 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     useBroadcastChannel: boolean;
     encrypt: { key?: boolean; value?: boolean; phrase: string };
     backupOnError: boolean;
-    debug?: boolean;
+    debug: boolean;
+    onChangeBeforeValidation: (oldValue: T, newValue: any) => void;
+    onChangeAfterValidation: (oldValue: T, newValue: T) => void;
   }> = {}
 ) => {
   const {
@@ -23,6 +25,8 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     debug,
     encrypt,
     backupOnError,
+    onChangeBeforeValidation,
+    onChangeAfterValidation,
   } = config;
 
   const log = (...args: any[]) => {
@@ -97,7 +101,15 @@ export const useLocalStorage: UseLocalStorageType = <T>(
       const valueToStore =
         value instanceof Function ? value(storedValue) : value;
 
+      if (onChangeBeforeValidation) {
+        onChangeBeforeValidation(storedValue, valueToStore);
+      }
+
       const validated = schema.parse(valueToStore);
+
+      if (onChangeAfterValidation) {
+        onChangeAfterValidation(storedValue, validated);
+      }
 
       let serializedValue: string;
       if (typeof validated === "string") {

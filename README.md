@@ -1,4 +1,14 @@
+<div align="center">
+
+  <img src="https://raw.githubusercontent.com/lukadevv/lukadevv/refs/heads/main/use-super-local-storage.webp" alt="logo" width="200"/>
+
 # use-super-local-storage
+
+![npm](https://img.shields.io/npm/dw/use-super-local-storage)
+
+> **Supports React and Preact!**
+
+</div>
 
 `use-super-local-storage` is a React hook that simplifies working with `localStorage` while providing advanced features like encryption, schema validation, error handling, and cross-tab synchronization.
 
@@ -20,6 +30,7 @@ yarn add use-super-local-storage
 
 - **Schema Validation**: Validate stored data using [Zod](https://zod.dev/).
 - **Encryption**: Encrypt keys and values using a simple XOR cipher.
+- **Synchronization**: Sync between all of components.
 - **Cross-Tab Synchronization**: Sync `localStorage` changes across browser tabs using `BroadcastChannel`.
 - **Error Handling**: Handle errors gracefully with custom callbacks.
 - **Backup on Error**: Automatically back up values with a timestamped key.
@@ -39,11 +50,10 @@ const schema = z.object({
 });
 
 const App = () => {
-  const [user, setUser] = useLocalStorage(
-    "user",
-    schema,
-    { name: "John Doe", age: 30 }
-  );
+  const [user, setUser] = useLocalStorage("user", schema, {
+    name: "John Doe",
+    age: 30,
+  });
 
   return (
     <div>

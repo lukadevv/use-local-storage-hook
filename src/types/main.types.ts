@@ -1,19 +1,41 @@
 import { ZodSchema } from "zod";
 
+/**
+ * A custom hook that manages local storage with optional encryption and error handling.
+ */
 export type UseLocalStorageType = <T>(
   key: string,
   schema: ZodSchema<T>,
   initialValue: T,
-  config?: LocalStorageConfiguration
+  config?: LocalStorageConfiguration<T>
 ) => [T, React.Dispatch<React.SetStateAction<T>>];
 
-export type LocalStorageConfiguration = {
+/**
+ * Configuration options for the useLocalStorage hook.
+ */
+export type LocalStorageConfiguration<T> = {
   /**
    * Handles errors that occur during local storage operations.
    *
    * @param value - The value that caused the error.
    */
   onError?: (value: any) => void;
+
+  /**
+   * A callback function that is called after the value has been validated.
+   *
+   * @param oldValue - The old/current value before the change.
+   * @param newValue - The new value that will be set.
+   */
+  onChangeAfterValidation?: (oldValue: T, newValue: T) => void;
+
+  /**
+   * A callback function that is called before the value is validated and set.
+   *
+   * @param oldValue - The old/current value before the change.
+   * @param newValue - The new value that will be set.
+   */
+  onChangeBeforeValidation?: (oldValue: T, newValue: any) => void;
 
   /**
    * Restore to initial value if an error occurs.
@@ -52,7 +74,7 @@ export type LocalStorageConfiguration = {
 
   /**
    * The value will be stored in a different key using the datetime as a suffix.
-   * 
+   *
    * @default false
    */
   backupOnError?: boolean;
