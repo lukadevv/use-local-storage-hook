@@ -1,22 +1,13 @@
 import { useState, useEffect } from "react";
 import { UseLocalStorageType } from "../types/main.types";
 import { encryptString, decryptString } from "../libs/encrypt";
-import { ZodSchema } from "zod";
+import { schema as libSchema } from "../libs/schema";
 
-export const useLocalStorage: UseLocalStorageType = <T>(
-  key: string,
-  schema: ZodSchema<T>,
-  initialValue: T,
-  config: Partial<{
-    onError: (value: any) => void;
-    restoreOnError: boolean;
-    useBroadcastChannel: boolean;
-    encrypt: { key?: boolean; value?: boolean; phrase: string };
-    backupOnError: boolean;
-    debug: boolean;
-    onChangeBeforeValidation: (oldValue: T, newValue: any) => void;
-    onChangeAfterValidation: (oldValue: T, newValue: T) => void;
-  }> = {}
+export const useLocalStorage: UseLocalStorageType = (
+  key,
+  schemaFn,
+  initialValue,
+  config = {}
 ) => {
   const {
     onError,
@@ -28,6 +19,10 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     onChangeBeforeValidation,
     onChangeAfterValidation,
   } = config;
+
+  // Build the schema instance using the provided schema function and builder
+  // (imported as libSchema in main.types.ts)
+  const schema = schemaFn(libSchema);
 
   const log = (...args: any[]) => {
     if (debug) console.log("[useLocalStorage]", ...args);
@@ -51,7 +46,7 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     return result;
   };
 
-  const [storedValue, setStoredValue] = useState<T>(() => {
+  const [storedValue, setStoredValue] = useState(() => {
     try {
       const storedKey = encryptIfNeeded(key, encrypt?.key);
       const item = localStorage.getItem(storedKey);
@@ -96,10 +91,10 @@ export const useLocalStorage: UseLocalStorageType = <T>(
     return initialValue;
   });
 
-  const setValue = (value: T | ((val: T) => T)) => {
+  const setValue = (valueOrFn: any) => {
     try {
       const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
+        typeof valueOrFn === "function" ? valueOrFn(storedValue) : valueOrFn;
 
       if (onChangeBeforeValidation) {
         onChangeBeforeValidation(storedValue, valueToStore);
@@ -146,9 +141,9 @@ export const useLocalStorage: UseLocalStorageType = <T>(
         const encryptedBackupKey = encryptIfNeeded(backupKey, encrypt?.key);
         localStorage.setItem(
           encryptedBackupKey,
-          typeof value === "string" ? value : JSON.stringify(value)
+          typeof valueOrFn === "string" ? valueOrFn : JSON.stringify(valueOrFn)
         );
-        log("backup", { backupKey, encryptedBackupKey, value });
+        log("backup", { backupKey, encryptedBackupKey, value: valueOrFn });
       }
     }
   };
@@ -177,7 +172,7 @@ export const useLocalStorage: UseLocalStorageType = <T>(
       channel.addEventListener("message", handleMessage);
       return () => channel.close();
     }
-  }, [key, schema, useBroadcastChannel, encrypt, onError]);
+  }, [key, schemaFn, useBroadcastChannel, encrypt, onError]);
 
   return [storedValue, setValue];
 };

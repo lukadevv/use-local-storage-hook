@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { z } from "zod";
+import { schema } from "../libs/schema";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 // Mock localStorage
@@ -30,10 +30,12 @@ const mockBroadcastChannel = {
 global.BroadcastChannel = jest.fn(() => mockBroadcastChannel) as any;
 
 describe("useLocalStorage Hook", () => {
-  const schema = z.object({
-    name: z.string(),
-    age: z.number(),
-  });
+  // Adapted schema to use your custom schema builder
+  const userSchema = (s: typeof schema) =>
+    s.object({
+      name: s.string(),
+      age: s.number(),
+    });
 
   const initialValue = { name: "John Doe", age: 30 };
 
@@ -51,7 +53,7 @@ describe("useLocalStorage Hook", () => {
 
   test("should initialize with the initial value if localStorage is empty", () => {
     const { result } = renderHook(() =>
-      useLocalStorage("user", schema, initialValue)
+      useLocalStorage("user", userSchema, initialValue)
     );
 
     expect(result.current[0]).toEqual(initialValue);
@@ -62,7 +64,7 @@ describe("useLocalStorage Hook", () => {
     localStorage.setItem("user", storedValue);
 
     const { result } = renderHook(() =>
-      useLocalStorage("user", schema, initialValue)
+      useLocalStorage("user", userSchema, initialValue)
     );
 
     expect(result.current[0]).toEqual({ name: "Jane Doe", age: 25 });
@@ -70,7 +72,7 @@ describe("useLocalStorage Hook", () => {
 
   // test("should update localStorage when value is set", () => {
   //   const { result } = renderHook(() =>
-  //     useLocalStorage("user", schema, initialValue)
+  //     useLocalStorage("user", userSchema, initialValue)
   //   );
 
   //   act(() => {
@@ -93,7 +95,7 @@ describe("useLocalStorage Hook", () => {
 
     const onError = jest.fn();
     const { result } = renderHook(() =>
-      useLocalStorage("user", schema, initialValue, { onError })
+      useLocalStorage("user", userSchema, initialValue, { onError })
     );
 
     expect(result.current[0]).toEqual(initialValue);
@@ -108,7 +110,9 @@ describe("useLocalStorage Hook", () => {
     };
 
     const { result } = renderHook(() =>
-      useLocalStorage("user", schema, initialValue, { encrypt: encryptConfig })
+      useLocalStorage("user", userSchema, initialValue, {
+        encrypt: encryptConfig,
+      })
     );
 
     act(() => {
@@ -122,7 +126,9 @@ describe("useLocalStorage Hook", () => {
     expect(encryptedValue).not.toBe(JSON.stringify({ name: "Bob", age: 40 }));
 
     const { result: newResult } = renderHook(() =>
-      useLocalStorage("user", schema, initialValue, { encrypt: encryptConfig })
+      useLocalStorage("user", userSchema, initialValue, {
+        encrypt: encryptConfig,
+      })
     );
 
     expect(newResult.current[0]).toEqual({ name: "Bob", age: 40 });
@@ -142,7 +148,7 @@ describe("useLocalStorage Hook", () => {
     global.BroadcastChannel = jest.fn(() => mockBroadcastChannel) as any;
 
     const { result } = renderHook(() =>
-      useLocalStorage("user", schema, initialValue, {
+      useLocalStorage("user", userSchema, initialValue, {
         useBroadcastChannel: true,
       })
     );

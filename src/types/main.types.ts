@@ -1,14 +1,19 @@
-import { ZodSchema } from "zod";
+import { schema as libSchema } from "../libs/schema";
 
 /**
  * A custom hook that manages local storage with optional encryption and error handling.
+ *
+ * The schema parameter is a function that receives the schema builder and returns a schema instance.
+ * The type R is the inferred value type (e.g. { user: number }).
  */
-export type UseLocalStorageType = <T>(
+export type UseLocalStorageType = <
+  R // R is the inferred value type
+>(
   key: string,
-  schema: ZodSchema<T>,
-  initialValue: T,
-  config?: LocalStorageConfiguration<T>
-) => [T, React.Dispatch<React.SetStateAction<T>>];
+  schema: (builder: typeof libSchema) => { parse(value: unknown): R },
+  initialValue: R,
+  config?: LocalStorageConfiguration<R>
+) => [R, React.Dispatch<React.SetStateAction<R>>];
 
 /**
  * Configuration options for the useLocalStorage hook.
